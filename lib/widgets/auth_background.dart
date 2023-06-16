@@ -26,14 +26,26 @@ class _logodelogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        width: double.infinity,
-        margin: EdgeInsets.only(top: 30),
-        child: Icon(
-          Icons.person_pin,
-          color: Colors.white,
-          size: 120,
-        ),
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(top: 30),
+            child: Icon(
+              Icons.person_pin,
+              color: Colors.white,
+              size: 120,
+            ),
+          ),
+          SizedBox(height: 20), // Espacio entre el logo y el botón de la cámara
+          ElevatedButton(
+            onPressed: () {
+              // Acción al presionar el botón de la cámara
+              // Aquí puedes agregar la lógica para subir fotos
+            },
+            child: Icon(Icons.camera_alt_rounded),
+          ),
+        ],
       ),
     );
   }
