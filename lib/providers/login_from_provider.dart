@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class LoginFormProvide extends ChangeNotifier {
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
-  String correo = '';
-  String contrasena = '';
+  String email = '';
+  String password = '';
 
   bool _isloading = false;
   bool get isLoading => _isloading;

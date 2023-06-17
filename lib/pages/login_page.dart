@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:unicar/providers/login_from_provider.dart';
 import 'package:unicar/widgets/widgets.dart';
 
+import '../services/services.dart';
 import '../ui/input_decorations.dart';
 
 class LoginPage extends StatelessWidget {
@@ -70,7 +71,7 @@ class _LoginForm extends StatelessWidget {
                     hintText: 'Correo@gmail.com',
                     labelText: 'Correo electronico',
                     prefixIcon: Icons.alternate_email),
-                onChanged: (value) => loginForm.correo = value,
+                onChanged: (value) => loginForm.email = value,
                 validator: (value) {
                   String pattern =
                       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -91,7 +92,7 @@ class _LoginForm extends StatelessWidget {
                     hintText: '******',
                     labelText: 'Contraseña',
                     prefixIcon: Icons.lock_clock_outlined),
-                onChanged: (value) => loginForm.contrasena = value,
+                onChanged: (value) => loginForm.password = value,
                 validator: (value) {
                   if (value != null && value.length >= 8) return null;
                   return 'La contraseña debe ser mayor a 7 caracteres';
@@ -117,12 +118,22 @@ class _LoginForm extends StatelessWidget {
                       ? null
                       : () async {
                           FocusScope.of(context).unfocus();
+                          final authService =
+                              Provider.of<AuthService>(context, listen: false);
                           if (!loginForm.isValidForm()) return;
                           loginForm.isLoading = true;
-                         await Future.delayed(Duration(seconds: 2));
-                          //TODO: validar si el login es
-                          loginForm.isLoading = false;
-                          Navigator.pushReplacementNamed(context, 'home');
+                          //await Future.delayed(Duration(seconds: 2));
+                          //TODO: validar si el login es correcto
+                          final String? errorMessage = await authService
+                              .login(loginForm.email, loginForm.password);
+
+                          if (errorMessage == null) {
+                            Navigator.pushReplacementNamed(context, 'home');
+                          } else {
+                            //mostrar error en pantalla
+                            print(errorMessage);
+                             loginForm.isLoading = false;
+                          }
                         })
             ],
           )),
