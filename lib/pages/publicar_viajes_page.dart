@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/custom_bottom_navigation.dart';
+
 class PublicarViajesPage extends StatelessWidget {
   //const PerfilesPage({super.key});
 
@@ -17,6 +19,7 @@ class PublicarViajesPage extends StatelessWidget {
       body: Center(
         child: Text('Publicar Tus viajes'),
       ),
+     // bottomNavigationBar: CutomBottomNavigation(),
     );
   }
 }

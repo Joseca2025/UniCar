@@ -13,43 +13,45 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
         body: AuthBackgroup(
             child: SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(height: 250),
-          CardContainer(
-              child: Column(
+          child: Column(
             children: [
-              SizedBox(height: 10),
-              Text(
-                'Crear una cuenta',
-                style: Theme.of(context).textTheme.headline4,
+              SizedBox(height: 250),
+              CardContainer(
+                  child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  Text(
+                    'Crear una cuenta',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                  SizedBox(height: 30),
+                  ChangeNotifierProvider(
+                    create: (_) => LoginFormProvide(),
+                    child: _LoginForm(),
+                  ),
+                  // _LoginForm()
+                ],
+              )),
+              SizedBox(height: 50),
+              TextButton(
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, 'login'),
+                style: ButtonStyle(
+                    overlayColor: MaterialStateProperty.all(
+                        Colors.blueAccent.withOpacity(0.1)),
+                    shape: MaterialStateProperty.all(StadiumBorder())),
+                child: Text(
+                  '¿Ya tienes una cuenta? ',
+                  style: TextStyle(fontSize: 18, color: Colors.blueAccent),
+                ),
               ),
-              SizedBox(height: 30),
-              ChangeNotifierProvider(
-                create: (_) => LoginFormProvide(),
-                child: _LoginForm(),
-              ),
-              // _LoginForm()
+              SizedBox(height: 50),
             ],
-          )),
-          SizedBox(height: 50),
-          TextButton(
-            onPressed: () => Navigator.pushReplacementNamed(context, 'login'),
-            style: ButtonStyle(
-                overlayColor: MaterialStateProperty.all(
-                    Colors.blueAccent.withOpacity(0.1)),
-                shape: MaterialStateProperty.all(StadiumBorder())),
-            child: Text(
-              '¿Ya tienes una cuenta? ',
-              style: TextStyle(fontSize: 18, color: Colors.black87),
-            ),
           ),
-          SizedBox(height: 50),
-        ],
-      ),
-    )));
+        )));
   }
 }
 
@@ -104,7 +106,7 @@ class _LoginForm extends StatelessWidget {
               ),
 
               //tendria que ir debajo de esto
-                TextFormField(
+              TextFormField(
                 autocorrect: false,
                 obscureText: false,
                 keyboardType: TextInputType.emailAddress,
@@ -180,7 +182,7 @@ class _LoginForm extends StatelessWidget {
               MaterialButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
-                  disabledColor: Colors.grey,
+                  disabledColor: Colors.white,
                   elevation: 0,
                   color: Colors.blueAccent,
                   child: Container(
@@ -208,12 +210,9 @@ class _LoginForm extends StatelessWidget {
                           } else {
                             //mostrar error en pantalla
                             print(errorMessage);
-                             loginForm.isLoading = false;
+                            loginForm.isLoading = false;
                           }
-
-                         
-                        }
-                        )
+                        })
             ],
           )),
     );

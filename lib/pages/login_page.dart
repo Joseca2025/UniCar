@@ -13,6 +13,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
         body: AuthBackgroup(
             child: SingleChildScrollView(
       child: Column(
@@ -43,8 +44,8 @@ class LoginPage extends StatelessWidget {
                     Colors.blueAccent.withOpacity(0.1)),
                 shape: MaterialStateProperty.all(StadiumBorder())),
             child: Text(
-              'crear una  cuenta ',
-              style: TextStyle(fontSize: 18, color: Colors.black87),
+              'Crear una  cuenta ',
+              style: TextStyle(fontSize: 18, color: Colors.blueAccent),
             ),
           ),
           SizedBox(height: 50),
@@ -106,7 +107,7 @@ class _LoginForm extends StatelessWidget {
               MaterialButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
-                  disabledColor: Colors.grey,
+                  disabledColor: Colors.white,
                   elevation: 0,
                   color: Colors.blueAccent,
                   child: Container(

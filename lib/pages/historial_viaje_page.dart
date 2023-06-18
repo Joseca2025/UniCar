@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/custom_bottom_navigation.dart';
+
 class HistorialViajesPage extends StatelessWidget {
   //const PerfilesPage({super.key});
 
@@ -17,6 +19,7 @@ class HistorialViajesPage extends StatelessWidget {
       body: Center(
         child: Text('Historial de viajes'),
       ),
+      //bottomNavigationBar: CutomBottomNavigation(),
     );
   }
 }

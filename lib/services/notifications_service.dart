@@ -6,8 +6,8 @@ class NotificationsService {
   static showSnackbar(String message) {
     final snackBar = SnackBar(
         content: Text(
-      message,
-      style: TextStyle(color: Colors.amber, fontSize: 30),
+      message='Usario incorrecto',
+      style: TextStyle(color: Colors.redAccent, fontSize: 30),
     ));
     messgerkey.currentState!.showSnackBar(snackBar);
   }
