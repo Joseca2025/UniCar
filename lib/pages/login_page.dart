@@ -35,15 +35,17 @@ class LoginPage extends StatelessWidget {
             ],
           )),
           SizedBox(height: 50),
-         TextButton(onPressed: ()=> Navigator.pushReplacementNamed(context,'register'),
-         style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all(Colors.blueAccent.withOpacity(0.1)),
-          shape: MaterialStateProperty.all(StadiumBorder())
-         ),
-          child: Text(
-            'crear una  cuenta ',
-            style: TextStyle(fontSize: 18,color: Colors.black87),
-          ),
+          TextButton(
+            onPressed: () =>
+                Navigator.pushReplacementNamed(context, 'register'),
+            style: ButtonStyle(
+                overlayColor: MaterialStateProperty.all(
+                    Colors.blueAccent.withOpacity(0.1)),
+                shape: MaterialStateProperty.all(StadiumBorder())),
+            child: Text(
+              'crear una  cuenta ',
+              style: TextStyle(fontSize: 18, color: Colors.black87),
+            ),
           ),
           SizedBox(height: 50),
         ],
@@ -124,15 +126,16 @@ class _LoginForm extends StatelessWidget {
                           loginForm.isLoading = true;
                           //await Future.delayed(Duration(seconds: 2));
                           //TODO: validar si el login es correcto
-                          final String? errorMessage = await authService
-                              .login(loginForm.email, loginForm.password);
+                          final String? errorMessage = await authService.login(
+                              loginForm.email, loginForm.password);
 
                           if (errorMessage == null) {
                             Navigator.pushReplacementNamed(context, 'home');
                           } else {
                             //mostrar error en pantalla
                             print(errorMessage);
-                             loginForm.isLoading = false;
+                            NotificationsService.showSnackbar(errorMessage);
+                            loginForm.isLoading = false;
                           }
                         })
             ],

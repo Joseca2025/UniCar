@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:unicar/pages/pages.dart';
 import 'package:unicar/pages/register_page.dart';
 import 'package:unicar/services/auth_service.dart';
+import 'package:unicar/services/services.dart';
 
 void main() => runApp(const MyApp());
 
@@ -18,12 +19,14 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'UniCar',
-        initialRoute: 'login',
+        initialRoute: 'checking',
         routes: {
           'login': (_) => LoginPage(),
           'register': (_) => RegisterPage(),
           'home': (_) => HomePage(),
+          'checking': (_) => CheckAuthPage(),
         },
+        scaffoldMessengerKey: NotificationsService.messgerkey,
         theme:
             ThemeData.light().copyWith(scaffoldBackgroundColor: Colors.white24),
       ),
