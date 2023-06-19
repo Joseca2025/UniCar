@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
-        ChangeNotifierProvider(create: (_)=> new UiProvider()),
+        ChangeNotifierProvider(create: (_) => new UiProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -30,15 +30,15 @@ class MyApp extends StatelessWidget {
           'register': (_) => RegisterPage(),
           'home': (_) => HomePage(),
           'checking': (_) => CheckAuthPage(),
-          'buscarviajes': (_) =>BuscarViajesPage() ,
-          'publicar': (_) =>PublicarViajesPage() ,
-          'historial': (_) =>HistorialViajesPage() ,
-          'perfil': (_) =>PerfilesPage() ,
+          'buscarviajes': (_) => BuscarViajesPage(),
+          'publicar': (_) => PublicarViajesPage(),
+          'historial': (_) => HistorialViajesPage(),
+          'perfil': (_) => PerfilesPage(),
         },
         scaffoldMessengerKey: NotificationsService.messgerkey,
-        theme:
-            ThemeData.light().copyWith(scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255)),
-            // Colors.white24
+        theme: ThemeData.light().copyWith(
+            scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255)),
+        // Colors.white24
       ),
     );
   }
