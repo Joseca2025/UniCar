@@ -37,7 +37,7 @@ class _logodelogin extends StatelessWidget {
               size: 120,
             ),
           ),
-          SizedBox(height: 20), // Espacio entre el logo y el botón de la cámara
+          SizedBox(height: 10), // Espacio entre el logo y el botón de la cámara
           ElevatedButton(
             onPressed: () {
               // Acción al presionar el botón de la cámara

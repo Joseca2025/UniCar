@@ -14,7 +14,8 @@ class PerfilesPage extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.mode_edit_outline)),
+            IconButton(
+                onPressed: () {}, icon: const Icon(Icons.mode_edit_outline)),
             const Text('Perfil de Usuario')
           ],
         ),
@@ -42,16 +43,17 @@ class PerfilesPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: 22.0),
-                              Center(
+                              const Center(
                                 child: CircleAvatar(
                                   radius: 100.0,
-                                  backgroundImage:
-                                      const AssetImage('assets/messi.jpg'),
                                   backgroundColor: Colors.transparent,
                                   foregroundColor: Colors.transparent,
                                   child: ClipOval(
-                                    child: Image.asset(
-                                      'assets/messi.jpg',
+                                    child: FadeInImage(
+                                      placeholder:
+                                          AssetImage('assets/jar-loading.gif'),
+                                      image: NetworkImage(
+                                          'https://via.placeholder.com/400x300/f6f6f6'),
                                       fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: double.infinity,
@@ -59,6 +61,8 @@ class PerfilesPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
+
+                              ////////////////////////
                               const Padding(
                                 padding: EdgeInsets.symmetric(
                                   vertical: 17.0,
@@ -95,7 +99,7 @@ class PerfilesPage extends StatelessWidget {
                                           ),
                                         ),
                                         const SizedBox(height: 16.0),
-                                      /*   _personalInfoRow(
+                                        /*   _personalInfoRow(
                                           label1: 'Carnet de Identidad',
                                           value1: user!.carnet ?? 'No especificado',
                                           label2: 'Fecha de Nacimiento',
@@ -107,14 +111,14 @@ class PerfilesPage extends StatelessWidget {
                                           label1: 'Teléfono',
                                           value1: '69027621',
                                           label2: 'Email',
-                                          value2:'jose@gmail.com',
+                                          value2: 'jose@gmail.com',
                                           //user!.email,
                                         ),
                                         _personalInfoRow(
                                           label1: 'Numero de Registro',
                                           value1: '219001324',
                                           label2: 'Tipo de usuario',
-                                          value2:'ESTUDIANTE',
+                                          value2: 'ESTUDIANTE',
                                           //user!.email,
                                         ),
                                         const SizedBox(height: 8.0),

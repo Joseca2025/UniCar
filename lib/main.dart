@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unicar/pages/busca_viaje_page.dart';
+import 'package:unicar/pages/car_page.dart';
 import 'package:unicar/pages/historial_viaje_page.dart';
 import 'package:unicar/pages/pages.dart';
 import 'package:unicar/pages/perfil_page.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
           'publicar': (_) => PublicarViajesPage(),
           'historial': (_) => HistorialViajesPage(),
           'perfil': (_) => PerfilesPage(),
+          'car': (_) => CarsPage(),
         },
         scaffoldMessengerKey: NotificationsService.messgerkey,
         theme: ThemeData.light().copyWith(
