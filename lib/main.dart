@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unicar/models/models.dart';
 import 'package:unicar/pages/busca_viaje_page.dart';
 import 'package:unicar/pages/car_page.dart';
 import 'package:unicar/pages/historial_viaje_page.dart';
@@ -9,9 +10,25 @@ import 'package:unicar/pages/register_page.dart';
 import 'package:unicar/providers/ui_provider.dart';
 import 'package:unicar/services/auth_service.dart';
 import 'package:unicar/services/services.dart';
+import 'package:unicar/services/user_service.dart';
 
 void main() => runApp(const MyApp());
 
+
+/* class AppState extends StatelessWidget {
+  const AppState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_)=>UsersService())
+      ],
+      child: MyApp(),
+    );
+  }
+}
+ */
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -32,9 +49,9 @@ class MyApp extends StatelessWidget {
           'home': (_) => HomePage(),
           'checking': (_) => CheckAuthPage(),
           'buscarviajes': (_) => BuscarViajesPage(),
-          'publicar': (_) => PublicarViajesPage(),
+          'publicar': (_) => HomeScreen(),
           'historial': (_) => HistorialViajesPage(),
-          'perfil': (_) => PerfilesPage(),
+          //'perfil': (_) => PerfilesPage(name: ,),
           'car': (_) => CarsPage(),
         },
         scaffoldMessengerKey: NotificationsService.messgerkey,

@@ -13,21 +13,21 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
         body: AuthBackgroup(
             child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 250),
+              const SizedBox(height: 250),
               CardContainer(
                   child: Column(
                 children: [
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     'Crear una cuenta',
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   ChangeNotifierProvider(
                     create: (_) => LoginFormProvide(),
                     child: _LoginForm(),
@@ -35,20 +35,20 @@ class RegisterPage extends StatelessWidget {
                   // _LoginForm()
                 ],
               )),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
               TextButton(
                 onPressed: () =>
                     Navigator.pushReplacementNamed(context, 'login'),
                 style: ButtonStyle(
                     overlayColor: MaterialStateProperty.all(
                         Colors.blueAccent.withOpacity(0.1)),
-                    shape: MaterialStateProperty.all(StadiumBorder())),
-                child: Text(
+                    shape: MaterialStateProperty.all(const StadiumBorder())),
+                child: const Text(
                   '¿Ya tienes una cuenta? ',
                   style: TextStyle(fontSize: 18, color: Colors.blueAccent),
                 ),
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
             ],
           ),
         )));
@@ -78,13 +78,13 @@ class _LoginForm extends StatelessWidget {
                 validator: (value) {
                   String pattern =
                       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                  RegExp regExp = new RegExp(pattern);
+                  RegExp regExp =  RegExp(pattern);
                   return regExp.hasMatch(value ?? '')
                       ? null
                       : 'El valor ingresado no un correro';
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               TextFormField(
@@ -101,7 +101,7 @@ class _LoginForm extends StatelessWidget {
                   return 'La contraseña debe ser mayor a 7 caracteres';
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
 
@@ -114,8 +114,9 @@ class _LoginForm extends StatelessWidget {
                     hintText: 'Nombre',
                     labelText: 'Nombre',
                     prefixIcon: Icons.person_2_outlined),
+                onChanged: (value) => loginForm.name = value,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               TextFormField(
@@ -126,6 +127,7 @@ class _LoginForm extends StatelessWidget {
                     hintText: 'Apellido completo',
                     labelText: 'Apellido',
                     prefixIcon: Icons.person_2_outlined),
+                onChanged: (value) => loginForm.lastname = value,
               ),
               const SizedBox(
                 height: 30,
@@ -140,6 +142,7 @@ class _LoginForm extends StatelessWidget {
                   labelText: 'Teléfono',
                   prefixIcon: Icons.phone_outlined,
                 ),
+                onChanged: (value) => loginForm.telefono = value,
               ),
               const SizedBox(
                 height: 30,
@@ -154,8 +157,9 @@ class _LoginForm extends StatelessWidget {
                   labelText: 'Registro',
                   prefixIcon: Icons.numbers_outlined,
                 ),
+             onChanged: (value) => loginForm.registro = int.parse(value),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               DropdownButtonFormField<String>(
@@ -169,6 +173,7 @@ class _LoginForm extends StatelessWidget {
                 onChanged: (String? newValue) {
                   // Actualizar el valor seleccionado
                   selectedUser = newValue;
+                loginForm.tipouser = selectedUser!;
                 },
                 items: <String>['ESTUDIANTE', 'CONDUCTOR'].map((String value) {
                   return DropdownMenuItem<String>(
@@ -177,7 +182,7 @@ class _LoginForm extends StatelessWidget {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               MaterialButton(
                   shape: RoundedRectangleBorder(
@@ -185,13 +190,6 @@ class _LoginForm extends StatelessWidget {
                   disabledColor: Colors.white,
                   elevation: 0,
                   color: Colors.blueAccent,
-                  child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                      child: Text(
-                        loginForm.isLoading ? 'Espere' : 'Registrar',
-                        style: TextStyle(color: Colors.white),
-                      )),
                   onPressed: loginForm.isLoading
                       ? null
                       : () async {
@@ -202,17 +200,35 @@ class _LoginForm extends StatelessWidget {
                           loginForm.isLoading = true;
                           //await Future.delayed(Duration(seconds: 2));
                           //TODO: validar si el login es correcto
-                          final String? errorMessage = await authService
-                              .createUser(loginForm.email, loginForm.password);
+                          final String? errorMessage =
+                              await authService.createUser(
+                                  loginForm.email,
+                                  loginForm.password,
+                                  loginForm.name,
+                                  loginForm.lastname,
+                                  loginForm.telefono,
+                                  loginForm.registro,
+                                  loginForm.tipouser,
+                                  loginForm.photoUrl,
+                                  loginForm.id);
 
                           if (errorMessage == null) {
-                            Navigator.pushReplacementNamed(context, 'home');
+                            if (context.mounted) {
+                              Navigator.pushReplacementNamed(context, 'home');
+                            }
                           } else {
                             //mostrar error en pantalla
                             print(errorMessage);
                             loginForm.isLoading = false;
                           }
-                        })
+                        },
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 80, vertical: 15),
+                      child: Text(
+                        loginForm.isLoading ? 'Espere' : 'Registrar',
+                        style: const TextStyle(color: Colors.white),
+                      )))
             ],
           )),
     );

@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:unicar/models/models.dart';
+import 'package:unicar/services/auth_service.dart';
+import 'package:unicar/services/user_service.dart';
 
 //import '../widgets/custom_bottom_navigation.dart';
 
 class PerfilesPage extends StatelessWidget {
-  const PerfilesPage({super.key});
+  //const PerfilesPage({super.key, required this.user});
+  final String? url;
+
+  const PerfilesPage({super.key, this.url, required this.name});
+
+  final String name;
 
   //const PerfilesPage({super.key});
+  //final User user;
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -63,14 +74,15 @@ class PerfilesPage extends StatelessWidget {
                               ),
 
                               ////////////////////////
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
                                   vertical: 17.0,
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Jose carlos',
-                                    style: TextStyle(
+                                    //ver como poner el nombre para mostrar
+                                    name,
+                                    style: const TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.w300,
                                       color: Colors.black,

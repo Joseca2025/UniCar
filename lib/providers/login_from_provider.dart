@@ -5,6 +5,13 @@ class LoginFormProvide extends ChangeNotifier {
 
   String email = '';
   String password = '';
+  String name='';
+  String lastname='';
+  String telefono='';
+  int registro=0;
+  String tipouser='';
+  String? photoUrl;
+  String? id;
 
   bool _isloading = false;
   bool get isLoading => _isloading;
