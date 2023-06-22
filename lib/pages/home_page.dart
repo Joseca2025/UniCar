@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unicar/models/models.dart';
 import 'package:unicar/pages/busca_viaje_page.dart';
 import 'package:unicar/pages/historial_viaje_page.dart';
 import 'package:unicar/pages/perfil_page.dart';
@@ -14,7 +15,11 @@ import '../widgets/custom_bottom_navigation.dart';
 import 'pages.dart';
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key, this.user});
+  
+   final User? user;
   //const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -24,27 +29,27 @@ class HomePage extends StatelessWidget {
         title: Row(
           children: [
             IconButton(
-              icon: Icon(Icons.login_outlined),
+              icon: const Icon(Icons.login_outlined),
               onPressed: () {
                 // Lógica para cerrar sesión
                 authService.logout();
                 Navigator.pushReplacementNamed(context, 'login');
               },
             ),
-            SizedBox(width: 10),
-            Text('Home'),
+            const SizedBox(width: 10),
+            const Text('Home'),
           ],
         ),
       ),
-      body: _HomePageBody(),
+      body: _HomePageBody(user: user,),
       bottomNavigationBar: CutomBottomNavigation(),
     );
   }
 }
 
 class _HomePageBody extends StatelessWidget {
-  //const _({super.key});
-
+  const _HomePageBody({this.user});
+    final User? user;
   @override
   Widget build(BuildContext context) {
     final uiProvider = Provider.of<UiProvider>(context);
@@ -53,19 +58,19 @@ class _HomePageBody extends StatelessWidget {
     //currentIndex
     switch (currentIndex) {
       case 0:
-        return BuscarViajesPage();
+        return const BuscarViajesPage();
 
       case 1:
-        return HomeScreen();
+        return const HomeScreen();
 
       case 2:
         return HistorialViajesPage();
 
       case 3:
-        return   PerfilesPage(user: null);
+        return   PerfilesPage(user: user);
 
       default:
-        return BuscarViajesPage();
+        return const BuscarViajesPage();
     }
   }
 }

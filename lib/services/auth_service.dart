@@ -12,7 +12,8 @@ class AuthService extends ChangeNotifier {
   final String _baseUrl2 = 'unicar-197b7-default-rtdb.firebaseio.com';
   final String _firebaseToken = 'AIzaSyD1uygl7Dj4VHp8ezCjNnIKSv0KyWcmqd0';
   final storage = const FlutterSecureStorage();
-    User usershow=User(email: '', name: '', lastname: '', telefono: '', registro: 0, tipouser: '') ;
+  User? usershow;
+
   Future<String?> createUser(
       String email,
       String password,
@@ -63,11 +64,11 @@ class AuthService extends ChangeNotifier {
     final resp = await http.post(url, body: json.encode(authData));
 
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
-    final emailUser = decodedResp['email'];
+    /* final emailUser = decodedResp['email']; */
 
 ///aquie de abajo
-    //final userT = await getUserByEmail(emailUser);
-    //usershow = User.fromMap(userT);
+    final Map<String, dynamic> userT = await getUserByEmail(email);
+    //
     /* if (userT != null) {
       // Usuario encontrado
       print('Usuario encontrado: $userT');
@@ -83,6 +84,10 @@ class AuthService extends ChangeNotifier {
       //token guardar en un lugar seguro
       // decodedResp['idToken'];
       await storage.write(key: 'token', value: decodedResp['idToken']);
+      usershow = User.fromMap(userT);
+      Map<String, dynamic> userMap = usershow!.toMap();
+      print(userMap);
+      await storage.write(key: 'user', value: json.encode(userMap));
       //await storage.write(key: 'token', value: decodedResp['idToken']);
       return null;
     } else {
@@ -97,6 +102,18 @@ class AuthService extends ChangeNotifier {
   Future<String> readToken() async {
     return await storage.read(key: 'token') ?? '';
   }
+
+  Future<User> readUser() async {
+  final userJson = await storage.read(key: 'user');
+  
+  if (userJson != null) {
+    final User userMap = User.fromJson(userJson);
+    return userMap;
+  } else {
+    // Manejar el caso en el que no se encuentre ningún usuario guardado
+    throw Exception('No se encontró ningún usuario guardado');
+  }
+}
 
 ////////////////
 /*   Future saveOrCreateProduct(User user) async {

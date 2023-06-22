@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   GoogleMapController? newGoogleMapController;
   final Set<Marker> _marker = {};
   final Set<Polyline> _polyline = Set<Polyline>();
-  bool openNavigationDrawer=true;
+  bool openNavigationDrawer = true;
   List<LatLng> polyCoordinate = [];
   PolylinePoints? polylinePoints;
   Geolocator? current;
@@ -40,99 +40,115 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   final List<Marker> _markers = <Marker>[
-    Marker(
+    const Marker(
         markerId: MarkerId('1'),
         position: LatLng(-17.7864704, -63.193088),
         infoWindow: InfoWindow(title: 'yo')),
-    Marker(
+    const Marker(
         markerId: MarkerId('3'),
         position: LatLng(-17.7864704, -63.193088),
         infoWindow: InfoWindow(title: 'yo')),
   ];
-  Set<Polyline> polylineSet={};
+  Set<Polyline> polylineSet = {};
 
-  Set<Marker> markerSet={};
-  Set<Circle> circleSet={};
+  Set<Marker> markerSet = {};
+  Set<Circle> circleSet = {};
 
-  List<LatLng> pLineCoordinatedList=[];
-  Future<void> drawPolyLineFromOriginToDestination(bool darkTheme) async{
-    var originPosition= Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
-    var destinationPosition= Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+  List<LatLng> pLineCoordinatedList = [];
+  Future<void> drawPolyLineFromOriginToDestination(bool darkTheme) async {
+    var originPosition =
+        Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
+    var destinationPosition =
+        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
-    var originLatLng= LatLng(originPosition!.locationLatitude!, originPosition.locationLongitude!);
-    var destinationLatLng= LatLng(destinationPosition!.locationLatitude!, destinationPosition.locationLongitude!);
+    var originLatLng = LatLng(
+        originPosition!.locationLatitude!, originPosition.locationLongitude!);
+    var destinationLatLng = LatLng(destinationPosition!.locationLatitude!,
+        destinationPosition.locationLongitude!);
 
-    showDialog(
-        context: context,
-        builder: (BuildContext context)=> ProgressDialog(message: "Espere por favor...",)
+    if (context.mounted) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => ProgressDialog(
+                message: "Espere por favor...",
+              ));
+    }
+
+    var directionDetailsInfo =
+        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
+            originLatLng, destinationLatLng);
+    setState(() {
+      tripDirectionDetailsInfo = directionDetailsInfo;
+    });
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
+
+    PolylinePoints pPoints = PolylinePoints();
+    List<PointLatLng> decodePolyLinePointsResultList =
+        pPoints.decodePolyline(directionDetailsInfo.e_points!);
+
+    pLineCoordinatedList.clear();
+
+    if (decodePolyLinePointsResultList.isNotEmpty) {
+      decodePolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
+        pLineCoordinatedList
+            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+      });
+    }
+
+    polylineSet.clear();
+
+    setState(() {
+      Polyline polyline = Polyline(
+        color: darkTheme ? Colors.amberAccent : Colors.blue,
+        polylineId: const PolylineId("PolylineID"),
+        jointType: JointType.round,
+        points: pLineCoordinatedList,
+        startCap: Cap.roundCap,
+        endCap: Cap.roundCap,
+        geodesic: true,
+        width: 5,
+      );
+
+      polylineSet.add(polyline);
+    });
+
+    LatLngBounds boundsLatLng;
+    if (originLatLng.latitude > destinationLatLng.latitude &&
+        originLatLng.longitude > destinationLatLng.longitude) {
+      boundsLatLng =
+          LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
+    } else if (originLatLng.longitude > destinationLatLng.longitude) {
+      boundsLatLng = LatLngBounds(
+        southwest: LatLng(originLatLng.latitude, destinationLatLng.longitude),
+        northeast: LatLng(destinationLatLng.latitude, originLatLng.longitude),
+      );
+    } else if (originLatLng.latitude > destinationLatLng.latitude) {
+      boundsLatLng = LatLngBounds(
+        southwest: LatLng(destinationLatLng.latitude, originLatLng.longitude),
+        northeast: LatLng(originLatLng.latitude, destinationLatLng.longitude),
+      );
+    } else {
+      boundsLatLng =
+          LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
+    }
+
+    newGoogleMapController!
+        .animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 65));
+
+    Marker originMarker = Marker(
+      markerId: const MarkerId("originID"),
+      infoWindow:
+          InfoWindow(title: originPosition.locationName, snippet: "Origin"),
+      position: originLatLng,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
     );
 
-   var directionDetailsInfo= await AssistantMethods.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
-   setState(() {
-     tripDirectionDetailsInfo = directionDetailsInfo;
-   });
-
-   Navigator.pop(context);
-   PolylinePoints pPoints= PolylinePoints();
-   List<PointLatLng> decodePolyLinePointsResultList= pPoints.decodePolyline(directionDetailsInfo.e_points!);
-
-   pLineCoordinatedList.clear();
-
-   if(decodePolyLinePointsResultList.isNotEmpty){
-     decodePolyLinePointsResultList.forEach((PointLatLng pointLatLng) { 
-       pLineCoordinatedList.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
-     });
-   }
-
-   polylineSet.clear();
-
-   setState(() {
-     Polyline polyline= Polyline(
-       color: darkTheme? Colors.amberAccent : Colors.blue,
-       polylineId: PolylineId("PolylineID"),
-       jointType: JointType.round,
-       points: pLineCoordinatedList,
-       startCap: Cap.roundCap,
-       endCap: Cap.roundCap,
-       geodesic: true,
-       width: 5,
-     );
-
-     polylineSet.add(polyline);
-   });
-
-   LatLngBounds boundsLatLng;
-   if(originLatLng.latitude > destinationLatLng.latitude && originLatLng.longitude > destinationLatLng.longitude){
-     boundsLatLng = LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
-   }
-   else if(originLatLng.longitude > destinationLatLng.longitude){
-     boundsLatLng = LatLngBounds(
-         southwest: LatLng(originLatLng.latitude,destinationLatLng.longitude),
-         northeast: LatLng(destinationLatLng.latitude, originLatLng.longitude),
-     );
-   }
-   else if(originLatLng.latitude > destinationLatLng.latitude){
-     boundsLatLng = LatLngBounds(
-       southwest: LatLng(destinationLatLng.latitude,originLatLng.longitude),
-       northeast: LatLng(originLatLng.latitude, destinationLatLng.longitude),
-     );
-   }
-   else{
-     boundsLatLng = LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
-   }
-   
-   newGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 65));
-
-   Marker originMarker= Marker(
-       markerId: MarkerId("originID"),
-     infoWindow: InfoWindow(title: originPosition.locationName,snippet: "Origin"),
-     position: originLatLng,
-     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-   );
-
-    Marker destinationMarker= Marker(
-      markerId: MarkerId("destinationID"),
-      infoWindow: InfoWindow(title: destinationPosition.locationName,snippet: "Destination"),
+    Marker destinationMarker = Marker(
+      markerId: const MarkerId("destinationID"),
+      infoWindow: InfoWindow(
+          title: destinationPosition.locationName, snippet: "Destination"),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
     );
@@ -142,8 +158,8 @@ class _HomeScreenState extends State<HomeScreen> {
       markerSet.add(destinationMarker);
     });
 
-    Circle originCircle= Circle(
-      circleId: CircleId("OriginID"),
+    Circle originCircle = Circle(
+      circleId: const CircleId("OriginID"),
       fillColor: Colors.green,
       radius: 12,
       strokeWidth: 3,
@@ -151,8 +167,8 @@ class _HomeScreenState extends State<HomeScreen> {
       center: originLatLng,
     );
 
-    Circle destinationCircle= Circle(
-      circleId: CircleId("DestinationID"),
+    Circle destinationCircle = Circle(
+      circleId: const CircleId("DestinationID"),
       fillColor: Colors.red,
       radius: 12,
       strokeWidth: 3,
@@ -166,14 +182,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
-
   void getPolyPoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         'AIzaSyD-QH5mQYAo-KzQmLX7aOGMIZPy24ea9n4',
-        PointLatLng(37.4193, -122.0905),
-        PointLatLng(37.4126, -122.0700));
+        const PointLatLng(37.4193, -122.0905),
+        const PointLatLng(37.4126, -122.0700));
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng points) =>
           polyCoordinate.add(LatLng(points.latitude, points.longitude)));
@@ -187,9 +201,9 @@ class _HomeScreenState extends State<HomeScreen> {
       print(value.latitude.toString() + "" + value.longitude.toString());
 
       _markers.add(Marker(
-          markerId: MarkerId('2'),
+          markerId: const MarkerId('2'),
           position: LatLng(value.latitude, value.longitude),
-          infoWindow: InfoWindow(title: 'Mi locacion')));
+          infoWindow: const InfoWindow(title: 'Mi locacion')));
       CameraPosition cameraPosition = CameraPosition(
           zoom: 14, target: LatLng(value.latitude, value.longitude));
       final GoogleMapController controller = await _controller.future;
@@ -208,15 +222,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return await Geolocator.getCurrentPosition();
   }
-  double bottomPaddingOfMap = 0;
-  double suggestedRidesContainerHeight=0;
 
-  void showSuggestedRidesContainer(){
+  double bottomPaddingOfMap = 0;
+  double suggestedRidesContainerHeight = 0;
+
+  void showSuggestedRidesContainer() {
     setState(() {
-      suggestedRidesContainerHeight=400;
+      suggestedRidesContainerHeight = 400;
       bottomPaddingOfMap = 400;
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -227,7 +243,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool darkTheme = MediaQuery.of(context).platformBrightness==Brightness.dark;
+    bool darkTheme =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
     return GestureDetector(
       child: Scaffold(
         body: Stack(
@@ -257,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: darkTheme ? Colors.amber.shade400 : Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -274,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Column(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(5),
                                   child: Row(
                                     children: [
                                       Icon(
@@ -283,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ? Colors.amber.shade300
                                             : Colors.blue.shade300,
                                       ),
-                                      SizedBox(width: 10),
+                                      const SizedBox(width: 10),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -319,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 Divider(
                                   height: 1,
                                   thickness: 2,
@@ -327,9 +344,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ? Colors.amber.shade200
                                       : Colors.blue.shade400,
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 Padding(
-                                  padding: EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(5),
                                   child: GestureDetector(
                                     onTap: () async {
                                       var responseFromSearchScreen =
@@ -337,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (c) =>
-                                                      SearchPlacesScreen()));
+                                                      const SearchPlacesScreen()));
 
                                       if (responseFromSearchScreen ==
                                           "obtainedDropoff") {
@@ -357,7 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ? Colors.amber.shade300
                                               : Colors.blue.shade300,
                                         ),
-                                        SizedBox(width: 10),
+                                        const SizedBox(width: 10),
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -376,7 +393,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Provider.of<AppInfo>(context)
                                                           .userDropOffLocation !=
                                                       null
-                                                  ? Provider.of<AppInfo>(context)
+                                                  ? Provider.of<AppInfo>(
+                                                          context)
                                                       .userDropOffLocation!
                                                       .locationName!
                                                   : "A donde?",
@@ -404,30 +422,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (c) => PrecisePickUpScreen(),
+                                      builder: (c) =>
+                                          const PrecisePickUpScreen(),
                                     ),
                                   );
                                 },
-                                child: Text(
-                                  "Cambiar punto de partida",
-                                  style: TextStyle(
-                                    color: darkTheme ? Colors.black : Colors.white,
-                                  ),
-                                ),
                                 style: ElevatedButton.styleFrom(
                                   primary: darkTheme
                                       ? Colors.amber.shade300
                                       : Colors.blue,
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
                                 ),
+                                child: Text(
+                                  "Cambiar punto de partida",
+                                  style: TextStyle(
+                                    color:
+                                        darkTheme ? Colors.black : Colors.white,
+                                  ),
+                                ),
                               ),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 5),
                               ElevatedButton(
                                 onPressed: () {
-                                  if (Provider.of<AppInfo>(context, listen: false)
+                                  if (Provider.of<AppInfo>(context,
+                                              listen: false)
                                           .userDropOffLocation !=
                                       null) {
                                     showSuggestedRidesContainer();
@@ -437,19 +458,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                             "Porfavor selecciona la ubicación destino");
                                   }
                                 },
-                                child: Text(
-                                  "Mostrar tarifa",
-                                  style: TextStyle(
-                                    color: darkTheme ? Colors.black : Colors.white,
-                                  ),
-                                ),
                                 style: ElevatedButton.styleFrom(
                                   primary: darkTheme
                                       ? Colors.amber.shade300
                                       : Colors.blue,
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
+                                  ),
+                                ),
+                                child: Text(
+                                  "Mostrar tarifa",
+                                  style: TextStyle(
+                                    color:
+                                        darkTheme ? Colors.black : Colors.white,
                                   ),
                                 ),
                               ),
@@ -464,16 +486,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        onPressed: loadData,
-        child: Icon(
-          Icons.local_activity,
-          color: Colors.white,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blue,
+          onPressed: loadData,
+          child: const Icon(
+            Icons.local_activity,
+            color: Colors.white,
+          ),
         ),
       ),
-      ),
-      
     );
   }
 }

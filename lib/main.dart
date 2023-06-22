@@ -49,19 +49,19 @@ class MyApp extends StatelessWidget {
         title: 'UniCar',
         initialRoute: 'checking',
         routes: {
-          'login': (_) => LoginPage(),
-          'register': (_) => RegisterPage(),
-          'home': (_) => HomePage(),
-          'checking': (_) => CheckAuthPage(),
-          'buscarviajes': (_) => BuscarViajesPage(),
-          'publicar': (_) => HomeScreen(),
+          'login': (_) => const LoginPage(),
+          'register': (_) => const RegisterPage(),
+          'home': (_) => const HomePage(),
+          'checking': (_) => const CheckAuthPage(),
+          'buscarviajes': (_) => const BuscarViajesPage(),
+          'publicar': (_) => const HomeScreen(),
           'historial': (_) => HistorialViajesPage(),
           //'perfil': (_) => PerfilesPage(name: ,),
-          'car': (_) => CarsPage(),
+          'car': (_) => const CarsPage(),
         },
         scaffoldMessengerKey: NotificationsService.messgerkey,
         theme: ThemeData.light().copyWith(
-            scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255)),
+            scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255)),
         // Colors.white24
       ),
     );

@@ -1,17 +1,15 @@
-import 'dart:convert';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'package:http/http.dart' as http;
+
 import 'package:unicar/assitan/request_assistant.dart';
 
 import '../global/global.dart';
 import '../models/direction_details_info.dart';
 import '../models/directions.dart';
-import '../models/user.dart';
+
 import '../temas/app_info.dart';
 
 class AssistantMethods{
