@@ -12,7 +12,7 @@ class AuthService extends ChangeNotifier {
   final String _baseUrl2 = 'unicar-197b7-default-rtdb.firebaseio.com';
   final String _firebaseToken = 'AIzaSyD1uygl7Dj4VHp8ezCjNnIKSv0KyWcmqd0';
   final storage = const FlutterSecureStorage();
-
+    User usershow=User(email: '', name: '', lastname: '', telefono: '', registro: 0, tipouser: '') ;
   Future<String?> createUser(
       String email,
       String password,
@@ -61,12 +61,29 @@ class AuthService extends ChangeNotifier {
     final url = Uri.https(
         _baseUrl, '/v1/accounts:signInWithPassword', {'key': _firebaseToken});
     final resp = await http.post(url, body: json.encode(authData));
+
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
-    //print(decodedResp);
+    final emailUser = decodedResp['email'];
+
+///aquie de abajo
+    //final userT = await getUserByEmail(emailUser);
+    //usershow = User.fromMap(userT);
+    /* if (userT != null) {
+      // Usuario encontrado
+      print('Usuario encontrado: $userT');
+      print(usershow.registro);
+    } else {
+      // Usuario no encontrado
+      print('Usuario no encontrado');
+    }
+
+    print(decodedResp['email']); */
+
     if (decodedResp.containsKey('idToken')) {
       //token guardar en un lugar seguro
       // decodedResp['idToken'];
       await storage.write(key: 'token', value: decodedResp['idToken']);
+      //await storage.write(key: 'token', value: decodedResp['idToken']);
       return null;
     } else {
       return decodedResp['error']['message'];
@@ -101,5 +118,24 @@ class AuthService extends ChangeNotifier {
     user.id = decodedData['name'];
 
     return user.id!;
+  }
+
+  Future<Map<String, dynamic>> getUserByEmail(String email) async {
+    const url = 'https://unicar-197b7-default-rtdb.firebaseio.com/user.json';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> users = json.decode(response.body);
+
+      // Buscar el usuario por correo electrónico
+      final user = users.values.firstWhere(
+        (user) => user['email'] == email,
+        orElse: () => null,
+      );
+
+      return user;
+    } else {
+      throw Exception('Error al obtener los usuarios');
+    }
   }
 }

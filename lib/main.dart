@@ -11,6 +11,7 @@ import 'package:unicar/providers/ui_provider.dart';
 import 'package:unicar/services/auth_service.dart';
 import 'package:unicar/services/services.dart';
 import 'package:unicar/services/user_service.dart';
+import 'package:unicar/temas/app_info.dart';
 
 void main() => runApp(const MyApp());
 
@@ -29,6 +30,8 @@ void main() => runApp(const MyApp());
   }
 }
  */
+
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -37,7 +40,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
-        ChangeNotifierProvider(create: (_) => new UiProvider()),
+        
+        ChangeNotifierProvider(create: (_) => UiProvider()),
+         ChangeNotifierProvider(create: (_) =>  AppInfo()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

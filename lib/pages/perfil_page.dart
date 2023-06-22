@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unicar/models/models.dart';
+import 'package:unicar/providers/login_from_provider.dart';
 import 'package:unicar/services/auth_service.dart';
 import 'package:unicar/services/user_service.dart';
 
 //import '../widgets/custom_bottom_navigation.dart';
 
 class PerfilesPage extends StatelessWidget {
-  //const PerfilesPage({super.key, required this.user});
-  final String? url;
-
-  const PerfilesPage({super.key, this.url, required this.name});
-
-  final String name;
+  //const PerfilesPage({super.key});
+  //final String id;
+  final User? user;
+  const PerfilesPage({super.key,  this.user});
+  //final nameTextEditingController= TextEditingController() ;
 
   //const PerfilesPage({super.key});
-  //final User user;
+  //final User? user;
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    final auth = Provider.of<AuthService>(context,listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -81,7 +82,10 @@ class PerfilesPage extends StatelessWidget {
                                 child: Center(
                                   child: Text(
                                     //ver como poner el nombre para mostrar
-                                    name,
+                                    //auth.name,
+                                    //user!.name,
+                                    'Jose carlos',
+                                    //auth.usershow.name,
                                     style: const TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.w300,
@@ -121,16 +125,21 @@ class PerfilesPage extends StatelessWidget {
                                         ), */
                                         _personalInfoRow(
                                           label1: 'Teléfono',
-                                          value1: '69027621',
+                                          value1: '690621',
+                                          //value1: auth.usershow.telefono,
                                           label2: 'Email',
-                                          value2: 'jose@gmail.com',
+                                          value2: 'jose@gmail.com'
+                                          //value2: auth.usershow.email,
+                                           //value2: auth.usershow.email,
                                           //user!.email,
                                         ),
                                         _personalInfoRow(
                                           label1: 'Numero de Registro',
                                           value1: '219001324',
+                                          //value1: auth.usershow.registro.toString(),
                                           label2: 'Tipo de usuario',
                                           value2: 'ESTUDIANTE',
+                                          // value2: auth.usershow.tipouser,
                                           //user!.email,
                                         ),
                                         const SizedBox(height: 8.0),
@@ -152,6 +161,7 @@ class PerfilesPage extends StatelessWidget {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(onPressed: (){}, label: Text('registrar auto')),
     );
   }
 

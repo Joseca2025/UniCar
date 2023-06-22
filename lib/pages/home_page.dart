@@ -62,7 +62,7 @@ class _HomePageBody extends StatelessWidget {
         return HistorialViajesPage();
 
       case 3:
-        return  PerfilesPage(name: '' );
+        return   PerfilesPage(user: null);
 
       default:
         return BuscarViajesPage();
